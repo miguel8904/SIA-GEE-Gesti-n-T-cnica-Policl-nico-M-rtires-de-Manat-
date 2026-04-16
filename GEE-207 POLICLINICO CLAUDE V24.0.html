@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SIA-GEE GOLD v24.0 — GEE-207</title>
+<style>
+:root{
+  --green:#2ecc71;--dark:#0a0a0a;--card:#141414;--blue:#3498db;
+  --red:#e74c3c;--text:#f0f0f0;--accent:#f1c40f;--border:#252525;
+  --mad1:#9b59b6;--dia:#f39c12;--pico:#e74c3c;--mad2:#3498db;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--dark);color:var(--text);padding:8px;font-size:13px;}
+.container{max-width:820px;margin:auto;background:var(--card);padding:14px;border-radius:14px;border:1px solid #222;}
+
+/* HEADER */
+.header{border-bottom:2px solid var(--green);padding-bottom:10px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
+.header-left h2{color:var(--green);font-size:17px;display:flex;align-items:center;gap:8px;}
+.header-left small{color:#666;font-size:10px;}
+.save-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-right:4px;}
+.save-dot.saving{background:var(--accent);animation:pulse 0.8s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.menu-btn{background:none;border:none;color:var(--green);font-size:22px;cursor:pointer;padding:4px 8px;border-radius:6px;}
+.version{font-size:9px;background:rgba(46,204,113,0.1);color:var(--green);padding:2px 6px;border-radius:10px;border:1px solid #2ecc7133;}
+
+/* GRID / INPUTS */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px;}
+.input-group{background:#0d0d0d;border:1px solid var(--border);border-radius:8px;padding:7px 10px;transition:border-color 0.2s;}
+.input-group:focus-within{border-color:var(--green);}
+label{font-size:9px;color:var(--green);font-weight:700;text-transform:uppercase;display:block;margin-bottom:2px;letter-spacing:0.4px;}
+input,select,textarea{width:100%;background:transparent;border:none;color:#fff;font-size:15px;outline:none;}
+input[readonly]{color:#888;}
+select option{background:#1a1a1a;}
+
+/* BOTONES */
+.btn{padding:13px;border:none;border-radius:9px;font-weight:700;cursor:pointer;width:100%;font-size:14px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:7px;transition:opacity 0.15s,transform 0.1s;-webkit-tap-highlight-color:transparent;}
+.btn:active{transform:scale(0.97);opacity:0.85;}
+.btn-green{background:var(--green);color:#000;}
+.btn-dark{background:#222;color:#fff;border:1px solid #333;}
+.btn-red-full{background:var(--red);color:#fff;}
+.btn-red{background:var(--red);color:#fff;padding:4px 7px;font-size:11px;border:none;border-radius:5px;cursor:pointer;}
+.btn-wa{background:#25D366;color:#fff;}
+.btn-purple{background:#6c3483;color:#fff;}
+.btn-cupet{background:#1a3a5c;color:#7ec8f7;border:1px solid #2a5a8c;}
+
+/* TABLA */
+.table-wrapper{overflow-x:auto;background:#0d0d0d;border-radius:9px;border:1px solid var(--border);margin-top:10px;}
+table{width:100%;border-collapse:collapse;font-size:10px;text-align:center;min-width:720px;}
+th{background:#181818;color:var(--green);padding:8px 5px;border:1px solid #222;font-size:9px;text-transform:uppercase;letter-spacing:0.3px;}
+td{padding:7px 4px;border:1px solid #1e1e1e;}
+tr:hover td{background:rgba(46,204,113,0.03);}
+.chk-cell{width:28px;text-align:center;}
+.chk-cell input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--green);}
+
+.tag{display:inline-block;padding:2px 5px;border-radius:4px;font-size:8px;font-weight:700;letter-spacing:0.5px;}
+.tag-mad1{background:rgba(155,89,182,0.2);color:var(--mad1);}
+.tag-dia{background:rgba(243,156,18,0.2);color:var(--dia);}
+.tag-pico{background:rgba(231,76,60,0.2);color:var(--pico);}
+.tag-mad2{background:rgba(52,152,219,0.2);color:var(--mad2);}
+.tag-cupet{background:rgba(52,152,219,0.15);color:#7ec8f7;}
+.tag-trasiego{background:rgba(231,76,60,0.15);color:#f79c7e;}
+.fila-cupet td{background:#0a1520!important;}
+.fila-trasiego td{background:#1a0a0a!important;}
+
+/* SELECTOR MES/AÑO */
+.mes-anio-bar{background:#0d0d0d;border:1px solid var(--border);border-radius:9px;padding:10px 12px;margin-top:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.mes-anio-bar select{background:#1a1a1a;border:1px solid #333;color:#fff;border-radius:6px;padding:6px 10px;font-size:13px;flex:1;min-width:100px;}
+.mes-anio-bar label{color:var(--accent);font-size:10px;font-weight:700;text-transform:uppercase;margin-bottom:0;white-space:nowrap;}
+
+/* RESUMEN MENSUAL */
+.resumen-mes{background:#0a0a0a;border:1px solid #333;border-radius:10px;padding:12px;margin-top:10px;display:none;}
+.resumen-mes-title{color:var(--accent);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;border-bottom:1px solid #222;padding-bottom:6px;}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.res-item{background:#111;border-radius:7px;padding:8px 10px;text-align:center;}
+.res-item strong{display:block;font-size:15px;color:var(--green);}
+.res-item span{font-size:9px;color:#666;text-transform:uppercase;}
+.res-item.accent strong{color:var(--accent);}
+.res-item.red strong{color:var(--red);}
+.res-item.blue strong{color:var(--blue);}
+
+/* TOTALES TURNO */
+.totales{background:#0d0d0d;border:1px solid var(--border);border-radius:9px;padding:10px 12px;margin-top:10px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;}
+.tot-item strong{display:block;font-size:14px;color:var(--green);}
+.tot-item span{font-size:9px;color:#666;text-transform:uppercase;}
+
+/* MODAL */
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.97);z-index:1000;overflow-y:auto;padding:10px;}
+.modal-content{background:var(--card);border:1px solid #333;border-radius:14px;max-width:640px;margin:10px auto;padding:18px;}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;border-bottom:1px solid #222;padding-bottom:10px;}
+.modal-header h3{color:var(--green);font-size:15px;}
+.close-x{background:#222;border:none;color:#aaa;border-radius:50%;width:28px;height:28px;font-size:15px;cursor:pointer;}
+
+/* PLF */
+.plf-section{background:#0a0a0a;border:1px solid #333;border-radius:8px;padding:10px;margin-bottom:10px;}
+.plf-section-title{font-size:10px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;}
+.tramo-header{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-bottom:10px;border-radius:6px;overflow:hidden;}
+.th-mad1{background:rgba(155,89,182,0.25);color:var(--mad1);padding:6px 3px;font-size:9px;font-weight:700;text-align:center;}
+.th-dia{background:rgba(243,156,18,0.25);color:var(--dia);padding:6px 3px;font-size:9px;font-weight:700;text-align:center;}
+.th-pico{background:rgba(231,76,60,0.25);color:var(--pico);padding:6px 3px;font-size:9px;font-weight:700;text-align:center;}
+.th-mad2{background:rgba(52,152,219,0.25);color:var(--mad2);padding:6px 3px;font-size:9px;font-weight:700;text-align:center;}
+.plf-resumen-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:12px;border-radius:8px;border:1px solid #333;background:#0a0a0a;}
+.plf-resumen-scroll table{min-width:420px;font-size:10px;text-align:center;border-collapse:collapse;}
+.plf-resumen-scroll th{background:#111;color:var(--green);padding:6px 8px;border:1px solid #222;font-size:9px;white-space:nowrap;}
+.plf-resumen-scroll td{padding:5px 8px;border:1px solid #1e1e1e;white-space:nowrap;}
+
+/* CUPET BOX */
+.cupet-box{background:#0a1520;border:1px solid #2a5a8c;border-radius:9px;padding:10px 12px;margin-bottom:10px;}
+.cupet-box-title{font-size:9px;color:#7ec8f7;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;}
+
+/* VARA */
+.vara-table{width:100%;border-collapse:collapse;font-size:11px;}
+.vara-table th{background:#111;color:var(--green);padding:7px;border:1px solid #222;font-size:9px;}
+.vara-table td{padding:5px;border:1px solid #1e1e1e;text-align:center;}
+.vara-table input{width:100%;background:#0d0d0d;border:1px solid #2a2a2a;color:#fff;border-radius:4px;padding:3px;text-align:center;font-size:13px;}
+
+/* MODAL PEGAR WA */
+.paste-preview{background:#0d0d0d;border:1px solid #333;border-radius:8px;padding:10px;max-height:300px;overflow-y:auto;font-size:11px;color:#aaa;white-space:pre-wrap;word-break:break-word;margin:10px 0;}
+.paste-row{background:#111;border:1px solid #222;border-radius:6px;padding:6px 8px;margin-bottom:5px;font-size:10px;color:#ccc;}
+.paste-row.ok{border-color:#2ecc7144;background:#0a1a0a;}
+.paste-row.err{border-color:#e74c3c44;background:#1a0a0a;}
+
+.info-box{background:#0d0d0d;border:1px solid #333;border-radius:7px;padding:9px 12px;margin-bottom:10px;font-size:11px;color:#aaa;line-height:1.5;}
+.info-box strong{color:var(--green);}
+.obs-area{width:100%;background:#0d0d0d;border:1px solid var(--border);color:#aaa;padding:9px;border-radius:7px;font-family:inherit;font-size:12px;resize:vertical;}
+.obs-area:focus{outline:1px solid var(--green);}
+.footer{text-align:center;font-size:10px;color:#333;margin-top:12px;}
+
+@media(max-width:480px){
+  .grid{grid-template-columns:1fr;}
+  .totales{grid-template-columns:1fr 1fr;}
+  .res-grid{grid-template-columns:1fr 1fr;}
+  body{padding:4px;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <h2>⚡ GEE-207 <span class="version">v24.0</span></h2>
+      <small><span class="save-dot" id="save_dot"></span><span id="save_txt">Sistema listo</span></small>
+    </div>
+    <button class="menu-btn" onclick="abrirModal('modal_menu')">⋮</button>
+  </div>
+
+  <!-- FORMULARIO -->
+  <div class="grid">
+    <div class="input-group"><label>📅 Fecha</label><input type="date" id="f_fecha"></div>
+    <div class="input-group"><label>🔧 Tipo Operación</label>
+      <select id="f_sigla">
+        <option value="IA">IA – Con Carga (Avería)</option>
+        <option value="PS">PS – Prueba Semanal</option>
+        <option value="LC">LC – Prueba del Litro</option>
+      </select>
+    </div>
+    <div class="input-group"><label>🟢 Arranque (HHMM)</label><input type="text" id="f_arr" placeholder="2100" maxlength="4" inputmode="numeric"></div>
+    <div class="input-group"><label>🔴 Parada (HHMM)</label><input type="text" id="f_par" placeholder="0135" maxlength="4" inputmode="numeric"></div>
+    <div class="input-group"><label>⏱ Horómetro Inicial</label><input type="number" id="f_hi" step="0.01" placeholder="8210.22"></div>
+    <div class="input-group"><label>🛢 Exist. Anterior (L)</label><input type="number" id="f_ex_ant" step="0.01" placeholder="647.00"></div>
+  </div>
+
+  <!-- CC REAL VARA -->
+  <div class="info-box">
+    <strong>🧮 CC Real — Medición vara 07:00 AM</strong><br>
+    Existencia Tanque Auxiliar medida hoy para calcular IC real del tramo DÍA.
+    <div class="grid" style="margin-top:8px;margin-bottom:0;">
+      <div class="input-group"><label>📏 Exist. Tanque Aux hoy (L)</label><input type="number" id="f_ex_hoy" step="0.01" placeholder="447.00" oninput="calcCCReal()"></div>
+      <div class="input-group"><label>🪣 Tanque Propio fijo (L)</label><input type="number" id="f_tp" step="0.01" placeholder="200.00" oninput="calcCCReal()"></div>
+    </div>
+    <div id="cc_real_result" style="margin-top:6px;font-size:12px;min-height:16px;"></div>
+  </div>
+
+  <!-- CUPET / TRASIEGO -->
+  <div class="cupet-box">
+    <div class="cupet-box-title">⛽ SERVIDO CUPET / TRASIEGO — Ajuste de Existencia</div>
+    <div class="grid">
+      <div class="input-group"><label>📋 Tipo de Movimiento</label>
+        <select id="f_mov_tipo">
+          <option value="">— Sin movimiento —</option>
+          <option value="CUPET">⛽ CUPET (Entrada +)</option>
+          <option value="TRASIEGO">🔄 TRASIEGO (Salida −)</option>
+        </select>
+      </div>
+      <div class="input-group"><label>📦 Cantidad (L)</label>
+        <input type="number" id="f_mov_cant" step="0.01" placeholder="0.00">
+      </div>
+    </div>
+    <div class="input-group" style="margin-bottom:0;">
+      <label>📝 Observación del movimiento</label>
+      <input type="text" id="f_mov_obs" placeholder="Ej: Servido CUPET Camión #307...">
+    </div>
+    <button class="btn btn-cupet" style="margin-top:8px;margin-bottom:0;" onclick="registrarMovimiento()">📥 REGISTRAR MOVIMIENTO</button>
+  </div>
+
+  <!-- BOTONES PRINCIPALES -->
+  <button class="btn btn-green" onclick="generarAnexo()">📊 CALCULAR Y REGISTRAR ANEXO 1</button>
+  <div class="grid">
+    <button class="btn btn-dark" onclick="abrirModal('modal_vara')">📏 REGISTRO VARA (DIARIO)</button>
+    <button class="btn btn-dark" onclick="limpiarTabla()">🗑️ LIMPIAR TABLA</button>
+  </div>
+
+  <!-- SELECTOR MES / AÑO -->
+  <div class="mes-anio-bar">
+    <label>📆 Ver:</label>
+    <select id="sel_mes" onchange="filtrarTabla()">
+      <option value="0">— Todos —</option>
+      <option value="1">Enero</option><option value="2">Febrero</option>
+      <option value="3">Marzo</option><option value="4">Abril</option>
+      <option value="5">Mayo</option><option value="6">Junio</option>
+      <option value="7">Julio</option><option value="8">Agosto</option>
+      <option value="9">Septiembre</option><option value="10">Octubre</option>
+      <option value="11">Noviembre</option><option value="12">Diciembre</option>
+    </select>
+    <select id="sel_anio" onchange="filtrarTabla()">
+      <option value="0">— Todos —</option>
+      <option value="2026">2026</option><option value="2027">2027</option>
+      <option value="2028">2028</option><option value="2029">2029</option>
+      <option value="2030">2030</option>
+    </select>
+    <button onclick="cerrarMes()" style="background:#1a2a1a;border:1px solid #2ecc7133;color:var(--green);border-radius:6px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">📊 CIERRE MES</button>
+  </div>
+
+  <!-- TABLA ANEXO 1 -->
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th class="chk-cell"><input type="checkbox" id="chk_all" onclick="toggleAllChk(this)"></th>
+          <th>Fecha<br>Tramo</th>
+          <th>T.Op</th>
+          <th>H.Arr</th>
+          <th>H.Par</th>
+          <th>Horón.I</th>
+          <th>Horón.F</th>
+          <th>TT(h)</th>
+          <th>IC<br>(L/h)</th>
+          <th>CC<br>(L)</th>
+          <th>EG<br>(kWh)</th>
+          <th>DL<br>(kW)</th>
+          <th>Exist.<br>(L)</th>
+          <th>Del</th>
+        </tr>
+      </thead>
+      <tbody id="anexo_body"></tbody>
+    </table>
+  </div>
+
+  <!-- TOTALES TURNO -->
+  <div class="totales" id="totales_bar" style="display:none;">
+    <div class="tot-item"><strong id="tot_tt">0.00</strong><span>Horas</span></div>
+    <div class="tot-item"><strong id="tot_cc">0.00</strong><span>Combustible (L)</span></div>
+    <div class="tot-item"><strong id="tot_eg">0.00</strong><span>Energía (kWh)</span></div>
+    <div class="tot-item"><strong id="tot_ex">0.00</strong><span>Exist. Final (L)</span></div>
+  </div>
+
+  <!-- RESUMEN MENSUAL (se muestra al hacer Cierre) -->
+  <div class="resumen-mes" id="resumen_mes">
+    <div class="resumen-mes-title" id="res_titulo">📊 CIERRE DEL MES</div>
+    <div class="res-grid">
+      <div class="res-item accent"><strong id="res_ex_ini">0.00</strong><span>Exist. inicio mes (L)</span></div>
+      <div class="res-item red"><strong id="res_tt">0.00</strong><span>Horas trabajadas</span></div>
+      <div class="res-item"><strong id="res_eg">0.00</strong><span>Energía generada (kWh)</span></div>
+      <div class="res-item red"><strong id="res_cc">0.00</strong><span>Combustible consumido (L)</span></div>
+      <div class="res-item blue"><strong id="res_cupet">0.00</strong><span>Servidos CUPET / Trasiego (L)</span></div>
+      <div class="res-item"><strong id="res_ex_fin">0.00</strong><span>Exist. final mes (L)</span></div>
+    </div>
+  </div>
+
+  <!-- OBSERVACIONES -->
+  <div style="margin-top:11px;">
+    <label style="font-size:9px;color:var(--green);font-weight:700;text-transform:uppercase;display:block;margin-bottom:4px;">📝 Observaciones del turno</label>
+    <textarea id="obs_main" rows="3" class="obs-area" placeholder="Observaciones del turno..."></textarea>
+  </div>
+
+  <!-- BOTONES EXPORTAR -->
+  <div style="margin-top:10px;">
+    <button class="btn btn-wa" onclick="exportarWA_seleccionados()">📲 ENVIAR SELECCIONADOS POR WHATSAPP</button>
+    <button class="btn btn-purple" onclick="abrirModal('modal_pegar_wa')">📋 PEGAR OPERACIONES DESDE WHATSAPP</button>
+  </div>
+
+  <div class="footer">Propiedad Intelectual: Miguel Acosta Neira © 2026 · SIA-GEE GOLD v24.0</div>
+</div>
+
+<!-- ══════ MODAL MENÚ ══════ -->
+<div id="modal_menu" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>⚙️ Menú del Sistema</h3>
+      <button class="close-x" onclick="cerrarModal('modal_menu')">✕</button>
+    </div>
+    <button class="btn btn-dark" onclick="cerrarModal('modal_menu');abrirModal('modal_plf')">⚙️ Configuración PLF Completa</button>
+    <button class="btn btn-dark" onclick="exportarJSON()">💾 Guardar Copia (.JSON)</button>
+    <button class="btn btn-dark" onclick="document.getElementById('imp_input').click()">📁 Importar Copia</button>
+    <button class="btn btn-dark" onclick="cerrarModal('modal_menu');abrirModal('modal_creditos')">ℹ️ Créditos</button>
+    <input type="file" id="imp_input" style="display:none" accept=".json" onchange="importarJSON(this)">
+  </div>
+</div>
+
+<!-- ══════ MODAL PLF ══════ -->
+<div id="modal_plf" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>⚙️ Configuración PLF Completa</h3>
+      <button class="close-x" onclick="cerrarModal('modal_plf')">✕</button>
+    </div>
+    <div class="tramo-header">
+      <div class="th-mad1">🌙 MAD1<br><small>00:00–04:59</small></div>
+      <div class="th-dia">☀️ DÍA<br><small>05:00–16:59</small></div>
+      <div class="th-pico">⚡ PICO<br><small>17:00–20:59</small></div>
+      <div class="th-mad2">🌙 MAD2<br><small>21:00–23:59</small></div>
+    </div>
+    <div class="plf-section">
+      <div class="plf-section-title">🛢 IC — Índice de Consumo con Carga (L/h)</div>
+      <div class="grid" style="grid-template-columns:1fr 1fr 1fr 1fr;">
+        <div class="input-group"><label style="color:var(--mad1);">IC MAD1</label><input type="number" id="p_ic_mad1" step="0.01"></div>
+        <div class="input-group"><label style="color:var(--dia);">IC DÍA</label><input type="number" id="p_ic_dia" step="0.01"></div>
+        <div class="input-group"><label style="color:var(--pico);">IC PICO</label><input type="number" id="p_ic_pico" step="0.01"></div>
+        <div class="input-group"><label style="color:var(--mad2);">IC MAD2</label><input type="number" id="p_ic_mad2" step="0.01"></div>
+      </div>
+      <div class="input-group" style="margin-top:8px;"><label>🔇 IC Sin Carga (L/h)</label><input type="number" id="p_ic_sc" step="0.01"></div>
+    </div>
+    <div class="plf-section">
+      <div class="plf-section-title">⚡ DL — Demanda Liberada PLF (kW)</div>
+      <div class="grid">
+        <div class="input-group"><label style="color:var(--dia);">DL DÍA (variable ref.)</label><input type="number" id="p_dl_dia" step="0.01"></div>
+        <div class="input-group"><label>DL PICO / MAD1 / MAD2</label><input type="number" id="p_dl_fija" step="0.01"></div>
+      </div>
+    </div>
+    <div class="plf-section">
+      <div class="plf-section-title">📐 ICC — Índice de Consumo Específico (g/kWh)</div>
+      <div class="grid" style="grid-template-columns:1fr 1fr 1fr 1fr;">
+        <div class="input-group"><label style="color:var(--mad1);">ICC MAD1</label><input type="number" id="p_icc_mad1" step="0.01"></div>
+        <div class="input-group"><label style="color:var(--dia);">ICC DÍA</label><input type="number" id="p_icc_dia" step="0.01"></div>
+        <div class="input-group"><label style="color:var(--pico);">ICC PICO</label><input type="number" id="p_icc_pico" step="0.01"></div>
+        <div class="input-group"><label style="color:var(--mad2);">ICC MAD2</label><input type="number" id="p_icc_mad2" step="0.01"></div>
+      </div>
+      <div class="input-group" style="margin-top:8px;">
+        <label>🔩 DC — Densidad del Diesel (g/L) · Constante</label>
+        <input type="number" id="p_dc" value="851.4" readonly style="color:#888;">
+      </div>
+    </div>
+    <button class="btn btn-green" onclick="guardarPLF()">💾 GUARDAR CAMBIOS PLF</button>
+    <div style="margin-top:12px;">
+      <div style="font-size:10px;color:var(--accent);font-weight:700;margin-bottom:6px;">📋 RESUMEN PLF ACTIVO</div>
+      <div class="plf-resumen-scroll">
+        <table>
+          <thead><tr>
+            <th>Tramo</th><th>Horario</th><th>IC (L/h)</th><th>DL (kW)</th><th>ICC (g/kWh)</th><th>Carga</th><th>Fórmula CC</th>
+          </tr></thead>
+          <tbody>
+            <tr><td style="color:var(--mad1);">MAD1</td><td>00:00–04:59</td><td id="r_ic_mad1">—</td><td id="r_dl_mad1">—</td><td id="r_icc_mad1">—</td><td>Fija</td><td style="color:#888;font-size:9px;">TT×IC</td></tr>
+            <tr><td style="color:var(--dia);">DÍA</td><td>05:00–16:59</td><td id="r_ic_dia">—</td><td id="r_dl_dia">—</td><td id="r_icc_dia">—</td><td style="color:var(--accent);">Variable</td><td style="color:#888;font-size:9px;">CC vara÷TT</td></tr>
+            <tr><td style="color:var(--pico);">PICO</td><td>17:00–20:59</td><td id="r_ic_pico">—</td><td id="r_dl_pico">—</td><td id="r_icc_pico">—</td><td>Fija</td><td style="color:#888;font-size:9px;">TT×IC</td></tr>
+            <tr><td style="color:var(--mad2);">MAD2</td><td>21:00–23:59</td><td id="r_ic_mad2">—</td><td id="r_dl_mad2">—</td><td id="r_icc_mad2">—</td><td>Fija</td><td style="color:#888;font-size:9px;">TT×IC</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="font-size:9px;color:#555;margin-top:3px;text-align:right;">← desliza →</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ MODAL VARA ══════ -->
+<div id="modal_vara" class="modal">
+  <div class="modal-content" style="max-width:98%;width:98%;">
+    <div class="modal-header">
+      <h3>📏 Registro Diario (VARA)</h3>
+      <button class="close-x" onclick="cerrarModal('modal_vara')">✕</button>
+    </div>
+    <div style="overflow-x:auto;max-height:440px;overflow-y:auto;">
+      <table class="vara-table">
+        <thead><tr><th>Día</th><th>CM (cm)</th><th>Lts T.A</th><th>Debe Ser</th><th>TP(L)</th><th>Exist. Total</th><th>Dif.</th><th>Obs.</th></tr></thead>
+        <tbody id="vara_body"></tbody>
+      </table>
+    </div>
+    <button class="btn btn-green" style="margin-top:10px;" onclick="guardarVara()">💾 GUARDAR MEDICIONES</button>
+  </div>
+</div>
+
+<!-- ══════ MODAL PEGAR WA ══════ -->
+<div id="modal_pegar_wa" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>📋 Pegar Operaciones desde WhatsApp</h3>
+      <button class="close-x" onclick="cerrarModal('modal_pegar_wa')">✕</button>
+    </div>
+    <div class="info-box">
+      <strong>Instrucciones:</strong> Pega el texto copiado desde WhatsApp en el recuadro de abajo.
+      El sistema detectará automáticamente las filas de operaciones y las mostrará para verificación antes de importar.
+    </div>
+    <textarea id="wa_paste_input" rows="8" class="obs-area" placeholder="Pega aquí el texto del reporte de WhatsApp..." oninput="parsearWA()"></textarea>
+    <div id="wa_preview" style="margin-top:10px;max-height:280px;overflow-y:auto;"></div>
+    <div id="wa_parse_count" style="font-size:11px;color:var(--accent);margin:8px 0;min-height:16px;"></div>
+    <button class="btn btn-green" id="wa_import_btn" onclick="importarDesdeWA()" style="display:none;">✅ IMPORTAR OPERACIONES VERIFICADAS</button>
+    <button class="btn btn-dark" onclick="cerrarModal('modal_pegar_wa')">← Cancelar</button>
+  </div>
+</div>
+
+<!-- ══════ MODAL CRÉDITOS ══════ -->
+<div id="modal_creditos" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>ℹ️ Créditos</h3>
+      <button class="close-x" onclick="cerrarModal('modal_creditos')">✕</button>
+    </div>
+    <p style="color:#aaa;font-size:13px;"><strong style="color:#fff;">Desarrollador:</strong> Miguel Acosta Neira</p>
+    <a href="tel:+5353383049" style="color:var(--blue);display:block;padding:10px;background:#0d0d0d;border-radius:7px;margin:8px 0;text-decoration:none;">📞 +53 5338 3049</a>
+    <p style="color:#aaa;font-size:12px;margin-top:8px;"><strong style="color:#fff;">Directivos:</strong> Erlan (EMER) · Ady López (UEB) · Nolberto Santana (UNE)</p>
+    <div style="margin-top:12px;text-align:center;padding:10px;background:#0d0d0d;border-radius:8px;">
+      <div style="color:var(--green);font-size:12px;font-weight:700;">SIA-GEE GOLD v24.0</div>
+      <div style="color:#444;font-size:10px;margin-top:3px;">Policlínico Mártires de Manatí · © 2026</div>
+    </div>
+    <button class="btn btn-dark" style="margin-top:10px;" onclick="cerrarModal('modal_creditos')">← Volver</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+// CONSTANTES Y PLF
+// ══════════════════════════════════════════════════
+const DC = 851.4;
+
+const AFORO = {1:2,2:5,3:10,4:15,5:20,6:27,7:34,8:41,9:49,10:57,11:66,12:75,13:84,14:94,15:103,16:114,17:124,18:135,19:146,20:157,21:169,22:180,23:192,24:204,25:216,26:229,27:242,28:254,29:267,30:280,31:294,32:307,33:321,34:334,35:348,36:362,37:376,38:390,39:404,40:418,41:433,42:447,43:462,44:476,45:491,46:506,47:521,48:535,49:550,50:565,51:580,52:595,53:610,54:626,55:641,56:656,57:671,58:686,59:701,60:717,61:732,62:747,63:762,64:777,65:792,66:807,67:823,68:838,69:853,70:868,71:882,72:897,73:912,74:927,75:942,76:956,77:971,78:985,79:1000,80:1014,81:1028,82:1042,83:1056,84:1070,85:1084,86:1098,87:1111,88:1125,89:1138,90:1151,91:1164,92:1177,93:1190,94:1202,95:1215,96:1227,97:1230,98:1251,99:1262,100:1273,101:1284,102:1295,103:1306,104:1316,105:1326,106:1336,107:1345,108:1354,109:1363,110:1372,111:1379,112:1387,113:1394,114:1401,115:1407,116:1412,117:1417,118:1420,119:1423};
+
+const PLF_DEF = {ic_mad1:5.10,ic_dia:13.00,ic_pico:4.80,ic_mad2:5.10,ic_sc:4.00,dl_dia:50.00,dl_fija:16.90,icc_mad1:256.94,icc_dia:221.40,icc_pico:241.82,icc_mad2:256.94};
+
+const TRAMOS = [
+  {n:'MAD1',ini:0, fin:5, k_ic:'ic_mad1',k_dl:'dl_fija',k_icc:'icc_mad1',tag:'tag-mad1',var:false},
+  {n:'DÍA', ini:5, fin:17,k_ic:'ic_dia', k_dl:'dl_dia', k_icc:'icc_dia', tag:'tag-dia', var:true },
+  {n:'PICO',ini:17,fin:21,k_ic:'ic_pico',k_dl:'dl_fija',k_icc:'icc_pico',tag:'tag-pico',var:false},
+  {n:'MAD2',ini:21,fin:24,k_ic:'ic_mad2',k_dl:'dl_fija',k_icc:'icc_mad2',tag:'tag-mad2',var:false},
+];
+
+const KEY_PLF='gee207_plf_v240';
+const KEY_REGISTROS='gee207_registros_v240'; // array de objetos JSON
+const KEY_FORM='gee207_form_v240';
+const KEY_VARA='gee207_vara_v240';
+
+// ══════════════════════════════════════════════════
+// ALMACÉN DE REGISTROS (array de objetos)
+// Cada registro: {id, tipo:'OP'|'MOV', fecha, tramo, sigla,
+//   hi, hf, horoI, horoF, tt, ic, cc, eg, dl, exFin,
+//   movTipo, movDelta, movObs}
+// ══════════════════════════════════════════════════
+let REGISTROS = [];
+
+function cargarRegistros(){
+  try{ REGISTROS = JSON.parse(localStorage.getItem(KEY_REGISTROS)||'[]'); }
+  catch(e){ REGISTROS=[]; }
+}
+function guardarRegistros(){
+  localStorage.setItem(KEY_REGISTROS, JSON.stringify(REGISTROS));
+}
+
+// ══════════════════════════════════════════════════
+// UTILIDADES
+// ══════════════════════════════════════════════════
+function hhmm2dec(s){ s=s.toString().padStart(4,'0'); return parseInt(s.slice(0,2))+(parseInt(s.slice(2,4))/60); }
+function dec2hhmm(d){ d=((d%24)+24)%24; let h=Math.floor(d),m=Math.round((d-h)*60); if(m===60){h++;m=0;} return h.toString().padStart(2,'0')+':'+m.toString().padStart(2,'0'); }
+
+function sumarDias(isoDate, n){
+  const d=new Date(isoDate+'T12:00:00'); d.setDate(d.getDate()+n);
+  return d.toISOString().split('T')[0];
+}
+function fechaCorta(iso){
+  if(!iso) return '—';
+  const p=iso.split('-'); return p.length===3?`${p[2]}/${p[1]}`:iso;
+}
+function mesAnioDeISO(iso){
+  if(!iso) return {mes:0,anio:0};
+  const p=iso.split('-');
+  return {mes:parseInt(p[1]),anio:parseInt(p[0])};
+}
+function genId(){ return 'r'+Date.now()+'_'+Math.random().toString(36).slice(2,5); }
+
+function plfData(){ return JSON.parse(localStorage.getItem(KEY_PLF)||'{}'); }
+function getPLF(k){ return parseFloat(plfData()[k]??PLF_DEF[k]); }
+
+function aforoLTS(cm){
+  if(cm<=0) return 0;
+  const b=Math.floor(cm),d=cm-b;
+  const v0=AFORO[b]??0,v1=AFORO[b+1]??v0;
+  return v0+(v1-v0)*d;
+}
+
+// ══════════════════════════════════════════════════
+// CC REAL
+// ══════════════════════════════════════════════════
+function calcCCReal(){
+  const exHoy=parseFloat(document.getElementById('f_ex_hoy').value)||0;
+  const tp=parseFloat(document.getElementById('f_tp').value)||200;
+  const exAnt=parseFloat(document.getElementById('f_ex_ant').value)||0;
+  const existHoy=exHoy+tp;
+  const ccReal=exAnt-existHoy;
+  const el=document.getElementById('cc_real_result');
+  if(exHoy>0){
+    el.innerHTML=`Exist. hoy: <strong>${existHoy.toFixed(2)} L</strong> &nbsp;|&nbsp; CC total turno: <strong style="color:${ccReal<0?'var(--red)':'var(--accent)'}">${ccReal.toFixed(2)} L</strong>`;
+  } else { el.innerHTML=''; }
+}
+
+// ══════════════════════════════════════════════════
+// MOTOR DE CÁLCULO — v24.0 BUG CORREGIDO
+// ══════════════════════════════════════════════════
+/*
+  BUG ANTERIOR: La existencia final de cada tramo se recalculaba
+  acumulando sobre exAnt original en lugar de actualizar el acumulador.
+  CORRECCIÓN: exAct se actualiza correctamente después de cada tramo.
+
+  FÓRMULAS:
+    CC (L)   = TT × IC                    (tramos fijos)
+    CC (L)   = CC_real_dia                (tramo DÍA variable)
+    EG (kWh) = CC × DC / ICC
+    DL (kW)  = EG / TT
+*/
+function calcularTramos(arrStr, parStr, fechaISO, exAnt, horoInic, sigla, ccRealTotal){
+  const arrDec=hhmm2dec(arrStr);
+  let parDec=hhmm2dec(parStr);
+  if(parDec<=arrDec) parDec+=24;
+
+  const ttTotal=parDec-arrDec;
+  if(ttTotal<=0.0001) return null;
+
+  const CORTES=[0,5,17,21,24,29,38,45];
+  let puntos=[arrDec];
+  CORTES.forEach(c=>{ if(c>arrDec&&c<parDec) puntos.push(c); });
+  puntos.push(parDec);
+  puntos=[...new Set(puntos)].sort((a,b)=>a-b);
+
+  const segs=[];
+  for(let i=0;i<puntos.length-1;i++){
+    const pIni=puntos[i],pFin=puntos[i+1],tt=pFin-pIni;
+    if(tt<=0.0001) continue;
+    const hMed=((pIni+tt/2)%24+24)%24;
+    const tDef=TRAMOS.find(t=>hMed>=t.ini&&hMed<t.fin)||TRAMOS[3];
+    const diasOffset=Math.floor(pIni/24);
+    const fechaSeg=diasOffset>0?sumarDias(fechaISO,diasOffset):fechaISO;
+    segs.push({nombre:tDef.n,tag:tDef.tag,isVar:tDef.var,
+      k_ic:tDef.k_ic,k_dl:tDef.k_dl,k_icc:tDef.k_icc,
+      tt,fecha:fechaSeg,hi:dec2hhmm(pIni%24),hf:dec2hhmm(pFin%24)});
+  }
+
+  // Calcular CC fijos para despejar CC del tramo DÍA
+  let ccFijos=0,ttDia=0;
+  segs.forEach(s=>{
+    if(!s.isVar) ccFijos+=getPLF(s.k_ic)*s.tt;
+    else ttDia=s.tt;
+  });
+
+  let ccDia_real=null;
+  if(ccRealTotal!==null&&ccRealTotal>0&&ttDia>0){
+    ccDia_real=ccRealTotal-ccFijos;
+    if(ccDia_real<0) ccDia_real=0;
+  }
+
+  // ── CORRECCIÓN BUG EXISTENCIA ──
+  // horoAct y exAct se actualizan en cascada correctamente
+  let horoAct=horoInic;
+  let exAct=exAnt;       // ← acumulador correcto
+  const filas=[];
+
+  segs.forEach(s=>{
+    const icc=getPLF(s.k_icc);
+    let cc,ic,eg,dl;
+
+    if(s.isVar&&ccDia_real!==null){
+      cc=ccDia_real;
+      ic=s.tt>0?cc/s.tt:0;
+      eg=(cc*DC)/icc;
+      dl=s.tt>0?eg/s.tt:0;
+    } else {
+      ic=getPLF(s.k_ic);
+      cc=ic*s.tt;         // CC = TT × IC
+      eg=(cc*DC)/icc;
+      dl=s.tt>0?eg/s.tt:0;
+    }
+
+    const horoF=horoAct+s.tt;
+    const exFin=exAct-cc;   // ← usa exAct actualizado, no exAnt original
+
+    filas.push({id:genId(),tipo:'OP',fecha:s.fecha,tramo:s.nombre,
+      tag:s.tag,isVar:s.isVar,sigla,
+      hi:s.hi,hf:s.hf,horoI:horoAct,horoF,
+      tt:s.tt,ic,cc,eg,dl,exFin});
+
+    horoAct=horoF;
+    exAct=exFin;   // ← actualización correcta del acumulador
+  });
+
+  return filas;
+}
+
+// ══════════════════════════════════════════════════
+// RENDER DE LA TABLA
+// ══════════════════════════════════════════════════
+function renderTabla(){
+  const mes=parseInt(document.getElementById('sel_mes').value);
+  const anio=parseInt(document.getElementById('sel_anio').value);
+  const body=document.getElementById('anexo_body');
+  body.innerHTML='';
+
+  REGISTROS.forEach(r=>{
+    // Filtrar por mes/año si están seleccionados
+    if(mes||anio){
+      const ma=mesAnioDeISO(r.fecha);
+      if(mes&&ma.mes!==mes) return;
+      if(anio&&ma.anio!==anio) return;
+    }
+
+    const tr=document.createElement('tr');
+    tr.id='row_'+r.id;
+    tr.dataset.rid=r.id;
+
+    if(r.tipo==='MOV'){
+      tr.className=r.movTipo==='CUPET'?'fila-cupet':'fila-trasiego';
+      tr.innerHTML=`
+        <td class="chk-cell"><input type="checkbox" class="row-chk"></td>
+        <td>${fechaCorta(r.fecha)}<br><span class="tag ${r.movTipo==='CUPET'?'tag-cupet':'tag-trasiego'}">${r.movTipo}</span></td>
+        <td colspan="6" style="text-align:left;color:#aaa;font-size:10px;padding-left:8px;">${r.movObs||'Sin observación'}</td>
+        <td style="color:${r.movDelta>0?'var(--green)':'var(--red)'}">${r.movDelta>0?'+':''}${r.movDelta.toFixed(2)}</td>
+        <td>—</td><td>—</td>
+        <td style="color:${r.exFin<50?'var(--red)':'inherit'}">${r.exFin.toFixed(2)}</td>
+        <td><button class="btn-red" onclick="eliminarRegistro('${r.id}')">🗑️</button></td>`;
+    } else {
+      tr.innerHTML=`
+        <td class="chk-cell"><input type="checkbox" class="row-chk"></td>
+        <td>${fechaCorta(r.fecha)}<br><span class="tag ${r.tag}">${r.tramo}</span></td>
+        <td>${r.sigla}</td>
+        <td>${r.hi}</td>
+        <td>${r.hf}</td>
+        <td>${r.horoI.toFixed(2)}</td>
+        <td>${r.horoF.toFixed(2)}</td>
+        <td>${r.tt.toFixed(2)}</td>
+        <td style="color:${r.isVar&&r.ccDiaFueReal?'var(--accent)':'#fff'}">${r.ic.toFixed(2)}</td>
+        <td>${r.cc.toFixed(2)}</td>
+        <td>${r.eg.toFixed(2)}</td>
+        <td>${r.dl.toFixed(2)}</td>
+        <td style="color:${r.exFin<50?'var(--red)':'inherit'}">${r.exFin.toFixed(2)}</td>
+        <td><button class="btn-red" onclick="eliminarRegistro('${r.id}')">🗑️</button></td>`;
+    }
+    body.appendChild(tr);
+  });
+
+  actualizarTotales();
+}
+
+function filtrarTabla(){ renderTabla(); }
+
+// ══════════════════════════════════════════════════
+// GENERAR ANEXO 1
+// ══════════════════════════════════════════════════
+function generarAnexo(){
+  const fecha=document.getElementById('f_fecha').value;
+  const arrStr=document.getElementById('f_arr').value.trim();
+  const parStr=document.getElementById('f_par').value.trim();
+  const horoI=parseFloat(document.getElementById('f_hi').value)||0;
+  const exAnt=parseFloat(document.getElementById('f_ex_ant').value)||0;
+  const sigla=document.getElementById('f_sigla').value;
+
+  if(!fecha){alert('⚠️ Ingrese la fecha.');return;}
+  if(arrStr.length!==4||isNaN(+arrStr)){alert('⚠️ Arranque: 4 dígitos ej. 2100');return;}
+  if(parStr.length!==4||isNaN(+parStr)){alert('⚠️ Parada: 4 dígitos ej. 0135');return;}
+
+  const exHoy=parseFloat(document.getElementById('f_ex_hoy').value)||0;
+  const tp=parseFloat(document.getElementById('f_tp').value)||200;
+  let ccReal=null;
+  if(exHoy>0){ ccReal=exAnt-(exHoy+tp); if(ccReal<0) ccReal=null; }
+
+  const filas=calcularTramos(arrStr,parStr,fecha,exAnt,horoI,sigla,ccReal);
+  if(!filas||!filas.length){alert('⚠️ No se pudieron calcular tramos.');return;}
+
+  filas.forEach(f=>{ f.ccDiaFueReal=(f.isVar&&ccReal!==null); REGISTROS.push(f); });
+
+  const ultimo=filas[filas.length-1];
+  document.getElementById('f_ex_ant').value=ultimo.exFin.toFixed(2);
+  document.getElementById('f_hi').value=ultimo.horoF.toFixed(2);
+  document.getElementById('f_ex_hoy').value='';
+  document.getElementById('cc_real_result').innerHTML='';
+
+  guardarRegistros();
+  renderTabla();
+  autoGuardar();
+}
+
+// ══════════════════════════════════════════════════
+// CUPET / TRASIEGO
+// ══════════════════════════════════════════════════
+function registrarMovimiento(){
+  const tipo=document.getElementById('f_mov_tipo').value;
+  if(!tipo){alert('⚠️ Seleccione el tipo de movimiento.');return;}
+  const cant=parseFloat(document.getElementById('f_mov_cant').value)||0;
+  if(cant===0){alert('⚠️ Ingrese la cantidad.');return;}
+  const obs=document.getElementById('f_mov_obs').value.trim();
+  const fecha=document.getElementById('f_fecha').value;
+  const exAnt=parseFloat(document.getElementById('f_ex_ant').value)||0;
+  const delta=tipo==='CUPET'?Math.abs(cant):-Math.abs(cant);
+  const exFin=exAnt+delta;
+
+  const reg={id:genId(),tipo:'MOV',fecha,movTipo:tipo,movDelta:delta,movObs:obs,exFin};
+  REGISTROS.push(reg);
+  document.getElementById('f_ex_ant').value=exFin.toFixed(2);
+  document.getElementById('f_mov_tipo').value='';
+  document.getElementById('f_mov_cant').value='';
+  document.getElementById('f_mov_obs').value='';
+
+  guardarRegistros();
+  renderTabla();
+  autoGuardar();
+}
+
+// ══════════════════════════════════════════════════
+// ELIMINAR REGISTRO
+// ══════════════════════════════════════════════════
+function eliminarRegistro(rid){
+  REGISTROS=REGISTROS.filter(r=>r.id!==rid);
+  guardarRegistros();
+  renderTabla();
+  autoGuardar();
+}
+
+function limpiarTabla(){
+  if(!confirm('¿Limpiar TODOS los registros?')) return;
+  REGISTROS=[];
+  guardarRegistros();
+  renderTabla();
+  document.getElementById('resumen_mes').style.display='none';
+  autoGuardar();
+}
+
+// ══════════════════════════════════════════════════
+// TOTALES TURNO
+// ══════════════════════════════════════════════════
+function actualizarTotales(){
+  const filas=document.querySelectorAll('#anexo_body tr');
+  if(!filas.length){document.getElementById('totales_bar').style.display='none';return;}
+  let tt=0,cc=0,eg=0,exLast=0;
+  filas.forEach(r=>{
+    const c=r.querySelectorAll('td');
+    const nCols=c.length;
+    if(nCols>=13){
+      // fila de operación: [chk, fecha, op, hi, hf, hoI, hoF, tt, ic, cc, eg, dl, exist, del]
+      const ttV=parseFloat(c[7].textContent);
+      const ccV=parseFloat(c[9].textContent);
+      const egV=parseFloat(c[10].textContent);
+      const exV=parseFloat(c[12].textContent);
+      if(!isNaN(ttV)&&c[7].textContent!=='—') tt+=ttV;
+      if(!isNaN(ccV)&&c[9].textContent!=='—') cc+=Math.abs(ccV);
+      if(!isNaN(egV)&&c[10].textContent!=='—') eg+=egV;
+      if(!isNaN(exV)) exLast=exV;
+    }
+  });
+  document.getElementById('tot_tt').textContent=tt.toFixed(2);
+  document.getElementById('tot_cc').textContent=cc.toFixed(2);
+  document.getElementById('tot_eg').textContent=eg.toFixed(2);
+  document.getElementById('tot_ex').textContent=exLast.toFixed(2);
+  document.getElementById('totales_bar').style.display='grid';
+}
+
+// ══════════════════════════════════════════════════
+// CHECKBOX — SELECCIONAR TODOS
+// ══════════════════════════════════════════════════
+function toggleAllChk(master){
+  document.querySelectorAll('.row-chk').forEach(c=>c.checked=master.checked);
+}
+
+// ══════════════════════════════════════════════════
+// EXPORTAR WA — SOLO SELECCIONADOS
+// ══════════════════════════════════════════════════
+function exportarWA_seleccionados(){
+  const selRows=document.querySelectorAll('#anexo_body tr');
+  const selIds=[];
+  selRows.forEach(r=>{
+    const chk=r.querySelector('.row-chk');
+    if(chk&&chk.checked) selIds.push(r.dataset.rid);
+  });
+  if(!selIds.length){alert('⚠️ Seleccione al menos una fila.');return;}
+
+  const selReg=REGISTROS.filter(r=>selIds.includes(r.id));
+  let ttT=0,ccT=0,egT=0,exLast=0,det='';
+
+  selReg.forEach(r=>{
+    if(r.tipo==='MOV'){
+      det+=`\n  ▸ ${r.movTipo}: ${r.movDelta>0?'+':''}${r.movDelta.toFixed(2)}L — ${r.movObs||''}`;
+      exLast=r.exFin;
+    } else {
+      ttT+=r.tt; ccT+=r.cc; egT+=r.eg; exLast=r.exFin;
+      det+=`\n  ▸ ${fechaCorta(r.fecha)} ${r.tramo}: ${r.tt.toFixed(2)}h | CC:${r.cc.toFixed(2)}L | EG:${r.eg.toFixed(2)}kWh`;
+    }
+  });
+
+  const fecha=document.getElementById('f_fecha').value||'---';
+  const fp=fecha.split('-');
+  const fc=fp.length===3?`${fp[2]}/${fp[1]}/${fp[0]}`:fecha;
+  const obs=document.getElementById('obs_main').value.trim();
+  const hi=document.getElementById('f_hi').value;
+
+  let msg=`⚡ *GEE-207 – REPORTE OPERACIONES*\n📅 ${fc} | Horón: ${hi}\n`;
+  msg+=`\n*DETALLE:*${det}\n`;
+  msg+=`\n*TOTALES SELECCIÓN:*\n  • Horas: *${ttT.toFixed(2)} h*\n  • Consumo: *${ccT.toFixed(2)} L*\n  • Energía: *${egT.toFixed(2)} kWh*\n  • Exist. final: *${exLast.toFixed(2)} L*\n`;
+  if(obs) msg+=`\n📝 ${obs}\n`;
+  msg+=`\n_SIA-GEE GOLD v24.0 · Policlínico Mártires de Manatí_`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
+// ══════════════════════════════════════════════════
+// PEGAR DESDE WHATSAPP — PARSEAR Y PREVISUALIZAR
+// ══════════════════════════════════════════════════
+let WA_PARSED = [];
+
+function parsearWA(){
+  const texto=document.getElementById('wa_paste_input').value;
+  const preview=document.getElementById('wa_preview');
+  const countEl=document.getElementById('wa_parse_count');
+  const importBtn=document.getElementById('wa_import_btn');
+  WA_PARSED=[];
+  preview.innerHTML='';
+
+  if(!texto.trim()){countEl.innerHTML='';importBtn.style.display='none';return;}
+
+  // Detectar líneas con patrón "▸ DD/MM TRAMO: Xh | CC:X | EG:X"
+  const lineas=texto.split('\n');
+  lineas.forEach(linea=>{
+    const m=linea.match(/▸\s*(\d{2}\/\d{2})\s+(MAD1|MAD2|PICO|DÍA|DIA|CUPET|TRASIEGO):\s*([\d.]+)h\s*\|\s*CC:([\d.]+)L\s*\|\s*EG:([\d.]+)kWh/i);
+    if(m){
+      const [,fechaCorta,tramo,tt,cc,eg]=m;
+      WA_PARSED.push({fechaCorta,tramo:tramo.toUpperCase(),tt:parseFloat(tt),cc:parseFloat(cc),eg:parseFloat(eg)});
+      preview.innerHTML+=`<div class="paste-row ok">✅ ${fechaCorta} <strong>${tramo}</strong> — ${tt}h | CC:${cc}L | EG:${eg}kWh</div>`;
+    }
+    // Detectar movimientos CUPET/TRASIEGO: "▸ CUPET: +200L — obs"
+    const m2=linea.match(/▸\s*(CUPET|TRASIEGO):\s*([+-]?[\d.]+)L\s*[—-]\s*(.*)/i);
+    if(m2){
+      const [,tipo,delta,obs]=m2;
+      WA_PARSED.push({movTipo:tipo.toUpperCase(),movDelta:parseFloat(delta),movObs:obs.trim()});
+      preview.innerHTML+=`<div class="paste-row ok">✅ <strong>${tipo}</strong> ${delta}L — ${obs}</div>`;
+    }
+  });
+
+  if(WA_PARSED.length>0){
+    countEl.innerHTML=`<strong>${WA_PARSED.length}</strong> operaciones detectadas. Verifique y pulse IMPORTAR.`;
+    importBtn.style.display='flex';
+  } else {
+    countEl.innerHTML='⚠️ No se detectaron operaciones. Asegúrese de pegar el texto completo del reporte.';
+    importBtn.style.display='none';
+    preview.innerHTML='<div class="paste-row err">Sin coincidencias detectadas en el texto pegado.</div>';
+  }
+}
+
+function importarDesdeWA(){
+  if(!WA_PARSED.length) return;
+  const exAnt=parseFloat(document.getElementById('f_ex_ant').value)||0;
+  let exAct=exAnt;
+  const fecha=document.getElementById('f_fecha').value||new Date().toISOString().split('T')[0];
+
+  WA_PARSED.forEach(p=>{
+    if(p.movTipo){
+      const exFin=exAct+p.movDelta;
+      REGISTROS.push({id:genId(),tipo:'MOV',fecha,movTipo:p.movTipo,movDelta:p.movDelta,movObs:p.movObs,exFin});
+      exAct=exFin;
+    } else {
+      // Reconstruir registro de operación desde datos WA
+      const tramoDef=TRAMOS.find(t=>t.n===p.tramo)||TRAMOS[1];
+      const icc=getPLF(tramoDef.k_icc);
+      const ic=p.tt>0?p.cc/p.tt:getPLF(tramoDef.k_ic);
+      const dl=p.tt>0?p.eg/p.tt:0;
+      const exFin=exAct-p.cc;
+      // Convertir fechaCorta DD/MM a ISO con año actual
+      let fechaISO=fecha;
+      const mf=p.fechaCorta.match(/(\d{2})\/(\d{2})/);
+      if(mf) fechaISO=`${new Date().getFullYear()}-${mf[2]}-${mf[1]}`;
+
+      REGISTROS.push({id:genId(),tipo:'OP',fecha:fechaISO,tramo:p.tramo,
+        tag:tramoDef.tag,isVar:tramoDef.var,sigla:'IA',
+        hi:'—',hf:'—',horoI:0,horoF:p.tt,
+        tt:p.tt,ic,cc:p.cc,eg:p.eg,dl,exFin,ccDiaFueReal:false});
+      exAct=exFin;
+    }
+  });
+
+  document.getElementById('f_ex_ant').value=exAct.toFixed(2);
+  guardarRegistros();
+  renderTabla();
+  autoGuardar();
+  cerrarModal('modal_pegar_wa');
+  document.getElementById('wa_paste_input').value='';
+  WA_PARSED=[];
+}
+
+// ══════════════════════════════════════════════════
+// CIERRE / RESUMEN MENSUAL
+// ══════════════════════════════════════════════════
+function cerrarMes(){
+  const mes=parseInt(document.getElementById('sel_mes').value);
+  const anio=parseInt(document.getElementById('sel_anio').value);
+  if(!mes||!anio){alert('⚠️ Seleccione mes y año para el cierre.');return;}
+
+  const MESES=['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+  // Filtrar registros del mes
+  const del_mes=REGISTROS.filter(r=>{
+    const ma=mesAnioDeISO(r.fecha);
+    return ma.mes===mes&&ma.anio===anio;
+  });
+
+  if(!del_mes.length){alert(`⚠️ No hay registros para ${MESES[mes]} ${anio}.`);return;}
+
+  // Calcular totales
+  let tt=0,cc=0,eg=0,movTotal=0;
+  let exIni=null,exFin=0;
+
+  del_mes.forEach(r=>{
+    if(r.tipo==='OP'){
+      if(exIni===null) exIni=r.horoI!==undefined?parseFloat(document.getElementById('f_ex_ant').value)||0:0;
+      tt+=r.tt; cc+=r.cc; eg+=r.eg; exFin=r.exFin;
+    } else {
+      movTotal+=Math.abs(r.movDelta);
+      exFin=r.exFin;
+    }
+  });
+
+  // Existencia de inicio: la exFin del último registro del mes anterior
+  const todoAnt=REGISTROS.filter(r=>{
+    const ma=mesAnioDeISO(r.fecha);
+    return ma.anio<anio||(ma.anio===anio&&ma.mes<mes);
+  });
+  const exIniMes=todoAnt.length>0?todoAnt[todoAnt.length-1].exFin:0;
+
+  document.getElementById('res_titulo').textContent=`📊 CIERRE ${MESES[mes].toUpperCase()} ${anio}`;
+  document.getElementById('res_ex_ini').textContent=exIniMes.toFixed(2)+' L';
+  document.getElementById('res_tt').textContent=tt.toFixed(2)+' h';
+  document.getElementById('res_eg').textContent=eg.toFixed(2)+' kWh';
+  document.getElementById('res_cc').textContent=cc.toFixed(2)+' L';
+  document.getElementById('res_cupet').textContent=movTotal.toFixed(2)+' L';
+  document.getElementById('res_ex_fin').textContent=exFin.toFixed(2)+' L';
+  document.getElementById('resumen_mes').style.display='block';
+  document.getElementById('resumen_mes').scrollIntoView({behavior:'smooth'});
+}
+
+// ══════════════════════════════════════════════════
+// PLF GUARDAR / CARGAR / RESUMEN
+// ══════════════════════════════════════════════════
+function guardarPLF(){
+  const cfg={};
+  Object.keys(PLF_DEF).forEach(k=>{const el=document.getElementById('p_'+k);if(el)cfg[k]=parseFloat(el.value)||PLF_DEF[k];});
+  localStorage.setItem(KEY_PLF,JSON.stringify(cfg));
+  actualizarResumenPLF();
+  mostrarGuardado('✓ PLF guardado');
+  cerrarModal('modal_plf');
+}
+function cargarPLF(){
+  const cfg=plfData();
+  Object.keys(PLF_DEF).forEach(k=>{const el=document.getElementById('p_'+k);if(el)el.value=cfg[k]??PLF_DEF[k];});
+  const dc=document.getElementById('p_dc');if(dc)dc.value=DC;
+  actualizarResumenPLF();
+}
+function actualizarResumenPLF(){
+  const g=k=>plfData()[k]??PLF_DEF[k];
+  const s=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  s('r_ic_mad1',g('ic_mad1'));s('r_dl_mad1',g('dl_fija'));s('r_icc_mad1',g('icc_mad1'));
+  s('r_ic_dia',g('ic_dia')+'*');s('r_dl_dia',g('dl_dia')+'*');s('r_icc_dia',g('icc_dia'));
+  s('r_ic_pico',g('ic_pico'));s('r_dl_pico',g('dl_fija'));s('r_icc_pico',g('icc_pico'));
+  s('r_ic_mad2',g('ic_mad2'));s('r_dl_mad2',g('dl_fija'));s('r_icc_mad2',g('icc_mad2'));
+}
+
+// ══════════════════════════════════════════════════
+// VARA
+// ══════════════════════════════════════════════════
+function renderVara(){
+  const body=document.getElementById('vara_body');
+  const saved=JSON.parse(localStorage.getItem(KEY_VARA)||'{}');
+  body.innerHTML='';
+  // Fila cierre mes anterior
+  const vc=saved['cierre']||{cm:0,debe:0,obs:''};
+  body.innerHTML+=`<tr style="background:#1a1a00;">
+    <td style="color:var(--accent);font-weight:700;font-size:9px;">CIERRE<br>MES ANT.</td>
+    <td><input type="number" step="0.1" id="vcm_cierre" value="${vc.cm}" oninput="updVara('cierre')" style="background:#111;"></td>
+    <td id="vta_cierre" style="color:var(--accent);">0.0</td>
+    <td><input type="number" id="vdb_cierre" value="${vc.debe}" oninput="updVara('cierre')" style="background:#111;"></td>
+    <td style="color:#888;">200</td>
+    <td id="vex_cierre" style="color:var(--accent);">0.0</td>
+    <td id="vdf_cierre" style="font-weight:700;">-</td>
+    <td><input type="text" id="vob_cierre" value="${vc.obs||''}" placeholder="Cierre mes ant." style="background:#111;font-size:11px;"></td>
+  </tr>`;
+  updVara('cierre');
+  for(let d=1;d<=31;d++){
+    const v=saved[d]||{cm:0,debe:0,obs:''};
+    body.innerHTML+=`<tr>
+      <td style="font-weight:700;color:var(--green);">${d}</td>
+      <td><input type="number" step="0.1" id="vcm_${d}" value="${v.cm}" oninput="updVara(${d})"></td>
+      <td id="vta_${d}" style="color:var(--blue);">0.0</td>
+      <td><input type="number" id="vdb_${d}" value="${v.debe}" oninput="updVara(${d})"></td>
+      <td style="color:#888;">200</td>
+      <td id="vex_${d}">0.0</td>
+      <td id="vdf_${d}" style="font-weight:700;">-</td>
+      <td><input type="text" id="vob_${d}" value="${v.obs||''}" placeholder="obs..."></td>
+    </tr>`;
+  }
+  for(let d=1;d<=31;d++) updVara(d);
+}
+function updVara(d){
+  const cm=parseFloat(document.getElementById(`vcm_${d}`)?.value)||0;
+  const debe=parseFloat(document.getElementById(`vdb_${d}`)?.value)||0;
+  const ta=aforoLTS(cm);
+  const ext=ta+200;
+  const dif=ext-debe;
+  const ta_el=document.getElementById(`vta_${d}`);
+  const ex_el=document.getElementById(`vex_${d}`);
+  const df_el=document.getElementById(`vdf_${d}`);
+  if(ta_el) ta_el.textContent=ta.toFixed(1);
+  if(ex_el) ex_el.textContent=ext.toFixed(1);
+  if(df_el){df_el.textContent=(dif>=0?'+':'')+dif.toFixed(2);df_el.style.color=dif<0?'var(--red)':'var(--green)';}
+}
+function guardarVara(){
+  const data={};
+  data['cierre']={cm:document.getElementById('vcm_cierre')?.value||0,debe:document.getElementById('vdb_cierre')?.value||0,obs:document.getElementById('vob_cierre')?.value||''};
+  for(let d=1;d<=31;d++) data[d]={cm:document.getElementById(`vcm_${d}`)?.value||0,debe:document.getElementById(`vdb_${d}`)?.value||0,obs:document.getElementById(`vob_${d}`)?.value||''};
+  localStorage.setItem(KEY_VARA,JSON.stringify(data));
+  cerrarModal('modal_vara');
+  mostrarGuardado('✓ Vara guardada');
+}
+
+// ══════════════════════════════════════════════════
+// AUTOSAVE FORMULARIO
+// ══════════════════════════════════════════════════
+const FORM_IDS=['f_fecha','f_arr','f_par','f_hi','f_ex_ant','f_sigla','obs_main','f_tp'];
+let _st=null;
+
+function autoGuardar(){
+  mostrarGuardado('⏳ Guardando...',true);
+  clearTimeout(_st);
+  _st=setTimeout(()=>{
+    const d={};
+    FORM_IDS.forEach(k=>{const el=document.getElementById(k);if(el)d[k]=el.value;});
+    localStorage.setItem(KEY_FORM,JSON.stringify(d));
+    mostrarGuardado('✓ Guardado');
+  },700);
+}
+
+function restaurar(){
+  cargarPLF();
+  cargarRegistros();
+  const fd=JSON.parse(localStorage.getItem(KEY_FORM)||'null');
+  if(fd){ FORM_IDS.forEach(k=>{const el=document.getElementById(k);if(el&&fd[k]!==undefined)el.value=fd[k];}); }
+  else{ document.getElementById('f_fecha').value=new Date().toISOString().split('T')[0]; document.getElementById('f_tp').value='200'; }
+  renderTabla();
+  FORM_IDS.forEach(k=>{const el=document.getElementById(k);if(el){el.addEventListener('input',()=>autoGuardar());el.addEventListener('change',()=>autoGuardar());}});
+  mostrarGuardado('✓ Datos restaurados');
+}
+
+function mostrarGuardado(msg,saving=false){
+  document.getElementById('save_txt').textContent=msg;
+  document.getElementById('save_dot').className='save-dot'+(saving?' saving':'');
+}
+
+// ══════════════════════════════════════════════════
+// JSON BACKUP
+// ══════════════════════════════════════════════════
+function exportarJSON(){
+  const data={version:'v24.0',fecha:new Date().toISOString(),
+    plf:localStorage.getItem(KEY_PLF),
+    registros:localStorage.getItem(KEY_REGISTROS),
+    form:localStorage.getItem(KEY_FORM),
+    vara:localStorage.getItem(KEY_VARA)};
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+  a.download=`GEE207_v240_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+}
+function importarJSON(inp){
+  const r=new FileReader();
+  r.onload=e=>{
+    try{
+      const d=JSON.parse(e.target.result);
+      if(d.plf)       localStorage.setItem(KEY_PLF,d.plf);
+      if(d.registros) localStorage.setItem(KEY_REGISTROS,d.registros);
+      if(d.form)      localStorage.setItem(KEY_FORM,d.form);
+      if(d.vara)      localStorage.setItem(KEY_VARA,d.vara);
+      location.reload();
+    }catch(err){alert('⚠️ Archivo JSON inválido.');}
+  };
+  r.readAsText(inp.files[0]);
+}
+
+// ══════════════════════════════════════════════════
+// MODAL
+// ══════════════════════════════════════════════════
+function abrirModal(id){
+  document.getElementById(id).style.display='block';
+  if(id==='modal_vara') renderVara();
+  if(id==='modal_plf')  cargarPLF();
+}
+function cerrarModal(id){document.getElementById(id).style.display='none';}
+document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)cerrarModal(m.id);}));
+
+// INIT
+window.addEventListener('DOMContentLoaded', restaurar);
+</script>
+</body>
+</html>
